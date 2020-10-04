@@ -37,6 +37,7 @@
     </head>
     <body>
         <h1>Disciplinas</h1>
+        <%@include file="WEB-INF/jspf/menu.jspf" %>
         <table border="1">
             <tr>
                 <th>Nome</th>
