@@ -9,6 +9,25 @@
   }catch(Exception e){
   
   }
+  
+  if(request.getParameter("altNota") != null){
+      int i = Integer.parseInt(request.getParameter("i"));
+      float nota = Float.parseFloat(request.getParameter("nota"));
+      
+      float notafinal;
+      if(nota < 0.0){
+          notafinal = 0.0f;
+      }else if(nota > 10.0){
+          notafinal = 10.0f;
+      }else{
+          notafinal = nota;
+      }
+      
+      arrayDisciplinas.getList().get(i).setNota(notafinal);
+      response.sendRedirect(request.getRequestURI());
+      
+  }
+
 %>
 <!DOCTYPE html>
 <html>
@@ -34,7 +53,7 @@
                 <td><%= arrayDisciplinas.getList().get(i).getNota() %></td>
                 <td>
                     <form method="post">
-                        <input type="number" name="nota" value="0.0">
+                        <input type="number" name="nota" value="0.0" required>
                         <input type="submit" name="altNota" value="Alterar Nota">
                         <input type="hidden" name="i" value="<%= i %>">
                     </form>
