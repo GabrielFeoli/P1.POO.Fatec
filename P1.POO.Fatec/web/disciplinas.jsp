@@ -59,7 +59,7 @@
     
     if(request.getParameter("FormDelete") != null){
         try{
-            String nome = request.getParameter("nomeAntigo");
+            String nome = request.getParameter("nome");
             Disciplinas.Delete(nome);
             response.sendRedirect(request.getRequestURI());
         }catch(Exception ex){
