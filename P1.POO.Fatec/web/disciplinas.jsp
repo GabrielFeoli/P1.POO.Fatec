@@ -2,32 +2,70 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-  Disciplinas arrayDisciplinas = null;
-  
-  try{
-      arrayDisciplinas = (Disciplinas) application.getAttribute("arrayDisciplinas");
-  }catch(Exception e){
-  
-  }
-  
-  if(request.getParameter("altNota") != null){
-      int i = Integer.parseInt(request.getParameter("i"));
-      float nota = Float.parseFloat(request.getParameter("nota"));
-      
-      float notafinal;
-      if(nota < 0.0){
-          notafinal = 0.0f;
-      }else if(nota > 10.0){
-          notafinal = 10.0f;
-      }else{
-          notafinal = nota;
-      }
-      
-      arrayDisciplinas.getList().get(i).setNota(notafinal);
-      response.sendRedirect(request.getRequestURI());
-      
-  }
-
+    
+    String exceptionMessage = null;
+    
+    if(request.getParameter("Cancelar") != null){
+        response.sendRedirect(request.getRequestURI());
+    }
+    
+    if(request.getParameter("FormInsert") != null){
+        try{
+            String nome = request.getParameter("nome");
+            String ementa = request.getParameter("ementa");
+            int ciclo = Integer.parseInt(request.getParameter("ciclo"));
+            float nota = Float.parseFloat(request.getParameter("nota"));
+            
+            float notafinal;
+            if(nota < 0.0){
+                notafinal = 0.0f;
+            }else if(nota > 10.0){
+                notafinal = 10.0f;
+            }else{
+                notafinal = nota;
+            }
+            
+            Disciplinas.Insert(nome, ementa, ciclo, notafinal);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            exceptionMessage = ex.getLocalizedMessage();
+        }
+    }
+    
+    if(request.getParameter("FormUpdate") != null){
+        try{
+            String nomeAntigo = request.getParameter("nomeAntigo");
+            String nome = request.getParameter("nome");
+            String ementa = request.getParameter("ementa");
+            int ciclo = Integer.parseInt(request.getParameter("ciclo"));
+            float nota = Float.parseFloat(request.getParameter("nota"));
+            
+            
+            float notafinal;
+            if(nota < 0.0){
+                notafinal = 0.0f;
+            }else if(nota > 10.0){
+                notafinal = 10.0f;
+            }else{
+                notafinal = nota;
+            }
+            
+            Disciplinas.Update(nomeAntigo, nome, ementa, ciclo, notafinal);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            exceptionMessage = ex.getLocalizedMessage();
+        }
+    }
+    
+    if(request.getParameter("FormDelete") != null){
+        try{
+            String nome = request.getParameter("nome");
+            Disciplinas.Delete(nome);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            exceptionMessage = ex.getLocalizedMessage();
+        }
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -38,25 +76,75 @@
     <body>
         <h1>Disciplinas</h1>
         <%@include file="WEB-INF/jspf/menu.jspf" %>
+        
+        <% if(exceptionMessage != null){%>
+            <div style="color:red"><%= exceptionMessage%></div>
+        <%}%>
+        
+        <% if(request.getParameter("prepararInsert") != null){%>
+            <h3>Inserir disciplina</h3>
+            <form>
+                Nome: <input type="text" name="nome">
+                Ementa: <input type="text" name="ementa">
+                Ciclo: <input type="text" name="ciclo">
+                Nota: <input type="text" name="nota">
+                <input type="submit" name="FormInsert" value="Inserir">
+                <input type="submit" name="Cancelar" value="Cancelar">
+            </form>
+            
+        <%}else if(request.getParameter("prepararUpdate") != null){%>
+            <h3>Alterar disciplina</h3>
+            <form>
+                <% String nome = request.getParameter("nome");%>
+                <% String ementa = request.getParameter("ementa");%>
+                <% String ciclo = request.getParameter("ciclo");%>
+                <% String nota = request.getParameter("nota");%>
+                <input type="hidden" name="nomeAntigo" value="<%= nome %>">
+                Nome: <input type="text" name="nome" value="<%= nome%>">
+                Ementa: <input type="text" name="ementa" value="<%= ementa%>">
+                Ciclo: <input type="text" name="ciclo" value="<%= ciclo%>">
+                Nota: <input type="text" name="nota" value="<%= nota%>">
+                <input type="submit" name="FormUpdate" value="Atualizar">
+                <input type="submit" name="Cancelar" value="Cancelar">
+            </form>
+                
+        <%}else if(request.getParameter("prepararDelete") != null){%>
+                <form>
+                    <% String nome = request.getParameter("nome");%>
+                    <input type="hidden" name="nomeAntigo" value="<%= nome %>">
+                    Excluir a disciplina <b><%= nome %></b>?
+                    <input type="submit" name="FormDelete" value="Excluir">
+                    <input type="submit" name="Cancelar" value="Cancelar">
+                </form>    
+                    
+        <%}else{%>
+                <form method="post">
+                    <input type="submit" name="prepararInsert" value="Inserir">
+                </form>
+        <%}%>
+        
         <table border="1">
             <tr>
                 <th>Nome</th>
                 <th>Ementa</th>
                 <th>Ciclo</th>
                 <th>Nota</th>
-                <th>Redefinir Nota</th>
+                <th>Controles</th>
             </tr>
-            <% for(int i = 0; i < arrayDisciplinas.getList().size(); i++){ %>
+            <% for(Disciplinas disc: Disciplinas.getList()){ %>
             <tr>
-                <td><%= arrayDisciplinas.getList().get(i).getNome() %></td>
-                <td><%= arrayDisciplinas.getList().get(i).getEmenta() %></td>
-                <td><%= arrayDisciplinas.getList().get(i).getCiclo() %></td>
-                <td><%= arrayDisciplinas.getList().get(i).getNota() %></td>
+                <td><%= disc.getNome() %></td>
+                <td><%= disc.getEmenta() %></td>
+                <td><%= disc.getCiclo() %></td>
+                <td><%= disc.getNota() %></td>
                 <td>
                     <form method="post">
-                        <input type="number" name="nota" value="0.0" required>
-                        <input type="submit" name="altNota" value="Alterar Nota">
-                        <input type="hidden" name="i" value="<%= i %>">
+                        <input type="hidden" name="nome" value="<%= disc.getNome() %>">
+                        <input type="hidden" name="ementa" value="<%= disc.getEmenta() %>">
+                        <input type="hidden" name="ciclo" value="<%= disc.getCiclo() %>">
+                        <input type="hidden" name="nota" value="<%= disc.getNota() %>">
+                        <input type="submit" name="prepararUpdate" value="Alterar">
+                        <input type="submit" name="prepararDelete" value="Excluir">
                     </form>
                 </td>
             </tr>
