@@ -145,12 +145,7 @@ public class Disciplinas {
     }
     
     public static String getCreateStatement(){
-        return "CREATE TABLE IF NOT EXISTS disciplinas("
-                + "nome VARCHAR(50) PRIMARY KEY,"
-                + "ementa VARCHAR(300) NOT NULL,"
-                + "ciclo NUMBER(2) NOT NULL,"
-                + "nota NUMBER(2,2) NOT NULL"
-                + ")";
+        return "DROP TABLE disciplinas";
     }
     
     
