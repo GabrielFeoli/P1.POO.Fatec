@@ -56,7 +56,7 @@
     
     if(request.getParameter("FormDelete") != null){
         try{
-            String nome = request.getParameter("nome");
+            String nome = request.getParameter("nomeAntigo");
             
             Disciplinas.Delete(nome);
             response.sendRedirect(request.getRequestURI());
@@ -109,13 +109,17 @@
                     <input type="submit" name="Cancelar" value="Cancelar">
                 </form>
         <%}else if(request.getParameter("prepararDelete") != null){%>
+            <form>
             <% String nome = request.getParameter("nome");%>
-            <input type="hidden" name="nome" value="<%= nome %>">
+            <input type="hidden" name="nomeAntigo" value="<%= nome %>">
                     Excluir a disciplina <b><%= nome %></b>?
                    <input type="submit" name="FormDelete" value="Excluir">
                    <input type="submit" name="Cancelar" value="Cancelar">
-        <%}else{%>
+            </form>
+            <%}else{%>
+            <form>
             <input type="submit" name="prepararInsert" value="Inserir">
+            </form>
         <%}%>
             
         
@@ -137,10 +141,10 @@
                 <td>
                     <form method="post">
                         
-                        <input type="hidden" name="i" value="<%= disc.getNome() %>">
-                        <input type="hidden" name="i" value="<%= disc.getEmenta() %>">
-                        <input type="hidden" name="i" value="<%= disc.getCiclo() %>">
-                        <input type="hidden" name="i" value="<%= disc.getNota() %>">
+                        <input type="hidden" name="nome" value="<%= disc.getNome() %>">
+                        <input type="hidden" name="ementa" value="<%= disc.getEmenta() %>">
+                        <input type="hidden" name="ciclo" value="<%= disc.getCiclo() %>">
+                        <input type="hidden" name="nota" value="<%= disc.getNota() %>">
                         <input type="submit" name="prepararUpdate" value="Alterar">
                         <input type="submit" name="prepararDelete" value="Excluir">
                     </form>
