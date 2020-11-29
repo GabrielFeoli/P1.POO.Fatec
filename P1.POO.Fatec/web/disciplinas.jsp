@@ -38,34 +38,25 @@
     <body>
         <h1>Disciplinas</h1>
         <%@include file="WEB-INF/jspf/menu.jspf" %>
-        
-        <%if(request.getParameter("prepararInsert") != null){
-            <h3>
-        <%}%>
-        
-        
         <table border="1">
             <tr>
                 <th>Nome</th>
                 <th>Ementa</th>
                 <th>Ciclo</th>
                 <th>Nota</th>
-                <th>Controles</th>
+                <th>Redefinir Nota</th>
             </tr>
-            <% for(Disciplinas disc: Disciplinas.getList()){ %>
+            <% for(int i = 0; i < arrayDisciplinas.getList().size(); i++){ %>
             <tr>
-                <td><%= disc.getNome() %></td>
-                <td><%= disc.getEmenta() %></td>
-                <td><%= disc.getCiclo() %></td>
-                <td><%= disc.getNota() %></td>
+                <td><%= arrayDisciplinas.getList().get(i).getNome() %></td>
+                <td><%= arrayDisciplinas.getList().get(i).getEmenta() %></td>
+                <td><%= arrayDisciplinas.getList().get(i).getCiclo() %></td>
+                <td><%= arrayDisciplinas.getList().get(i).getNota() %></td>
                 <td>
                     <form method="post">
-                        <input type="hidden" name="nome" value="<%= disc.getNome() %>">
-                        <input type="hidden" name="ementa" value="<%= disc.getEmenta() %>">
-                        <input type="hidden" name="ciclo" value="<%= disc.getCiclo() %>">
-                        <input type="hidden" name="nota" value="<%= disc.getNota() %>">
-                        <input type="submit" name="prepararUpdate" value="Alterar">
-                        <input type="submit" name="prepararDelete" value="Excluir">
+                        <input type="number" name="nota" value="0.0" required>
+                        <input type="submit" name="altNota" value="Alterar Nota">
+                        <input type="hidden" name="i" value="<%= i %>">
                     </form>
                 </td>
             </tr>
